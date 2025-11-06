@@ -27,7 +27,7 @@ app.post("/send", async (req, res) => {
     if (!req.body.number || !req.body.message) {
         return res.status(400).send("Number and message are required");
     }
-    const number = req.body.number; // e.g. +8801XXXXXXX
+    const number = req.body.number; // e.g. 8801XXXXXXX
     const message = req.body.message;
 
     try {
