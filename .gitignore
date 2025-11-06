@@ -9,6 +9,10 @@ yarn-error.log*
 # Environment variables
 .env
 
+# WhatsApp Web.js session/auth
+.wwebjs_cache/
+.wwebjs_auth/
+
 # OS files
 .DS_Store
 Thumbs.db

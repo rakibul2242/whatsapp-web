@@ -1,16 +1,17 @@
-const { Client } = require("whatsapp-web.js");
+const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const express = require("express");
 const bodyParser = require("body-parser");
-
 const app = express();
 app.use(bodyParser.json());
 
 const client = new Client({
+    authStrategy: new LocalAuth(),
     puppeteer: {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     }
 });
+
 client.initialize();
 
 client.on("qr", (qr) => {
@@ -18,15 +19,23 @@ client.on("qr", (qr) => {
     qrcode.generate(qr, { small: true });
 });
 
+client.on("authenticated", () => {
+    console.log("Authentication successful!");
+});
+
 client.on("ready", () => {
     console.log("WhatsApp is ready!");
 });
 
+client.on("auth_failure", (msg) => {
+    console.error("Authentication failed:", msg);
+});
+
 app.post("/send", async (req, res) => {
-    console.log(req);
     if (!req.body.number || !req.body.message) {
         return res.status(400).send("Number and message are required");
     }
+
     const number = req.body.number; // e.g. 8801XXXXXXX
     const message = req.body.message;
 
